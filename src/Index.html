@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>개인 기록 실험실 α</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=general-sans@400,600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600&family=JetBrains+Mono:wght@400&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+/* Genesis 디자인 토큰 */
+:root{--primary:#6366F1;--primary-hover:#4F46E5;--primary-soft:rgba(99,102,241,.10);--ring:0 0 0 3px rgba(99,102,241,.12);
+--neutral:#9C9C9C;--bg:#FAFAFA;--bg-alt:#F2F2F4;--surface:#FFFFFF;--text:#0A0A0A;--text-2:#6B6B6B;--border:#E8E8EC;--dot:#D9D9DE;
+--success:#10B981;--warning:#F59E0B;--error:#EF4444;--nav:rgba(255,255,255,.8);
+--f-display:"General Sans","Pretendard Variable",system-ui,sans-serif;--f-body:"DM Sans","Pretendard Variable",system-ui,sans-serif;--f-code:"JetBrains Mono","Pretendard Variable",ui-monospace,monospace}
+@media (prefers-color-scheme:dark){:root{--primary:#818CF8;--primary-hover:#6366F1;--primary-soft:rgba(129,140,248,.14);--ring:0 0 0 3px rgba(129,140,248,.25);
+--neutral:#7A7A80;--bg:#0E0E10;--bg-alt:#1A1A1E;--surface:#151518;--text:#F2F2F3;--text-2:#A1A1A8;--border:#2A2A30;--dot:#26262C;--nav:rgba(21,21,24,.8)}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:400 15px/1.6 var(--f-body);-webkit-font-smoothing:antialiased}
+h1,h2{font-family:var(--f-display);font-weight:600;margin:0}
+a{color:var(--primary);text-decoration:none}a:hover{color:var(--primary-hover);text-decoration:underline}
+.wrap{max-width:1280px;margin:0 auto;padding:0 24px}
+[hidden]{display:none!important}
+
+/* 상단 바 */
+.topbar{position:sticky;top:0;z-index:10;height:56px;background:var(--nav);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.topbar .wrap{height:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{font:600 15px var(--f-display);letter-spacing:-.02em;white-space:nowrap}
+nav{display:flex;gap:4px}
+nav button{height:32px;padding:0 12px;border:0;background:none;color:var(--text-2);font-size:14px}
+nav button:hover{background:var(--bg-alt);color:var(--text);transform:none}
+nav button[aria-selected="true"]{background:var(--primary-soft);color:var(--primary)}
+
+/* 머리말 + 점 격자 */
+.hero{position:relative;padding:64px 0 32px}
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(var(--dot) 1px,transparent 1px) 0 0/20px 20px;-webkit-mask-image:linear-gradient(to bottom,#000 30%,transparent);mask-image:linear-gradient(to bottom,#000 30%,transparent)}
+.overline{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-2)}
+.hero h1{font-size:60px;line-height:1.05;letter-spacing:-.04em;margin:12px 0 16px}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:4px 12px;border-radius:9999px;background:var(--bg-alt);color:var(--text-2);font-size:12px}
+.chip::before{content:"";width:6px;height:6px;border-radius:9999px;background:var(--success)}
+#status{min-height:24px;margin:16px 0 0;font-size:13px;color:var(--text-2);white-space:pre-wrap}
+
+/* 카드(섹션) */
+main{padding-bottom:64px}
+.grid{display:grid;gap:24px;align-items:start}
+@media (min-width:900px){.grid{grid-template-columns:2fr 1fr}}
+section{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;margin:0 0 24px}
+.grid section{margin:0}
+section h2{font-size:24px;letter-spacing:-.03em;margin-bottom:16px}
+small,.muted{display:block;font-size:13px;color:var(--text-2)}
+
+/* 입력 */
+label{display:block;margin:16px 0 8px;font-size:13px;color:var(--text-2)}
+input,textarea{font:400 14px/1.5 var(--f-body);color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:10px 14px;outline:none;transition:border-color .2s,box-shadow .2s}
+input::placeholder,textarea::placeholder{color:var(--neutral)}
+input:focus,textarea:focus{border-color:var(--primary);box-shadow:var(--ring)}
+textarea{display:block;width:100%;min-height:120px;resize:vertical}
+label input,label textarea{display:block;width:100%;margin-top:8px}
+input[type=file]{width:100%;padding:8px}
+input[type=checkbox]{width:20px;height:20px;margin:0;accent-color:var(--primary);flex:none}
+
+/* 버튼 */
+button{font:600 14px var(--f-body);height:38px;padding:0 16px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;transition:transform .2s,box-shadow .2s,background .2s,border-color .2s}
+button:hover{transform:translateY(-1px);border-color:var(--text-2)}
+button:focus-visible{outline:none;box-shadow:var(--ring);border-color:var(--primary)}
+button.primary{background:var(--primary);border-color:var(--primary);color:#fff}
+button.primary:hover{background:var(--primary-hover);border-color:var(--primary-hover);box-shadow:0 4px 12px rgba(99,102,241,.35)}
+button.danger{color:var(--error);border-color:var(--error);background:none}
+button:disabled{opacity:.5;cursor:wait;transform:none;box-shadow:none}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0}
+.row input{flex:1;min-width:180px}
+
+/* 대화 */
+#conversation{max-height:420px;overflow:auto;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:16px}
+#conversation>p{margin:0;color:var(--text-2)}
+.message{margin:0 0 16px;white-space:pre-wrap;overflow-wrap:anywhere}
+.message:last-child{margin-bottom:0}
+.message .role{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-2);margin-bottom:4px}
+
+/* 기록 카드 */
+#count{font-size:13px;color:var(--text-2);margin:0 0 12px}
+article{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin:0 0 12px;transition:transform .2s,box-shadow .2s}
+article:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.08)}
+article>small{font-family:var(--f-code);font-size:12px;color:var(--text-2)}
+article>p{margin:8px 0;white-space:pre-wrap;overflow-wrap:anywhere}
+article .row{margin:12px 0 0}
+article .row button{height:32px;padding:0 12px;font-size:13px}
+pre{font:400 13px/1.6 var(--f-code);background:var(--bg-alt);border-radius:8px;padding:12px;margin:8px 0;white-space:pre-wrap;overflow-wrap:anywhere}
+
+/* 확인 창 */
+dialog{width:94%;max-width:760px;max-height:90vh;overflow:auto;padding:24px;border:1px solid var(--border);border-radius:12px;background:var(--surface);color:var(--text);box-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1)}
+dialog::backdrop{background:rgba(10,10,10,.4);backdrop-filter:blur(2px)}
+dialog h2{font-size:24px;letter-spacing:-.03em}
+#previewHelp{color:var(--text-2)}
+dialog textarea{height:260px;font-family:var(--f-code);font-size:13px}
+.consent{display:flex;gap:12px;align-items:center;color:var(--text);font-size:14px}
+
+@media (max-width:640px){.wrap{padding:0 16px}.logo{display:none}.topbar .wrap{justify-content:center}.hero{padding:32px 0 24px}.hero h1{font-size:36px}section{padding:20px}}
+.col{display:grid;gap:24px;align-content:start}
+.message.answer{font-size:20px;line-height:1.55}
+.inline{display:inline-flex;gap:8px;align-items:center;margin:0;font-size:14px;color:var(--text)}
+label.inline input{display:inline-block;width:20px;margin:0;flex:none;min-width:0}
+article input:not([type]){width:100%}
+.cand{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;margin:16px 0}
+.cand textarea{min-height:64px;margin-top:6px}
+ul.plain{margin:4px 0 8px;padding-left:18px}
+h3{font:600 15px var(--f-display);margin:16px 0 6px}
+#nowBox p{margin:4px 0}
+</style></head><body>
+<div class="topbar"><div class="wrap"><span class="logo">External Memory α</span>
+<nav role="tablist"><button data-tab="talk" role="tab" aria-selected="true">대화</button><button data-tab="data" role="tab">기록 찾기</button><button data-tab="evening" role="tab">저녁 정리</button><button data-tab="profile" role="tab">내 정보</button></nav></div></div>
+<div class="wrap">
+<header class="hero"><span class="overline">Personal record / Experiment 001</span><h1>개인 기록 실험실 α</h1><span class="chip" id="connection">연결 확인 중</span>
+<p id="status" role="status" aria-live="polite"></p></header>
+<main>
+<div id="talk" class="grid"><section><h2>대화</h2><div id="conversation" aria-live="polite"><p>오늘 있었던 일을 들려주세요. 궁금한 것은 물어보세요.</p></div>
+<label for="entry">말하기 또는 물어보기</label><textarea id="entry" placeholder="예: 오후 3시에 병원 가야 해 / 아까 뭐 하려고 했지? / 약국 가는 거 끝냈나?"></textarea>
+<div class="row"><button class="primary" id="save">기록 남기기</button><button id="ask">물어보기</button><button id="askAi" hidden>외부 AI로 다시 묻기</button><label class="inline"><input type="checkbox" id="speak"> 답 읽어 주기</label></div>
+<small>물어보기는 저장한 기록만 찾아서 답하고, 밖으로 보내지 않습니다.</small></section>
+<div class="col"><section><h2>지금</h2><div id="nowBox"><p class="muted">불러오는 중…</p></div><div class="row"><button id="refreshNow">새로 보기</button></div></section>
+<section><h2>녹음 파일</h2><input type="file" id="audio" accept=".mp3,.m4a,.wav,.webm,audio/*"><div class="row"><button id="upload">녹음 올리기</button></div>
+<p class="muted">최대 8 MiB. 원음 전사는 외부 AI를 켠 경우에만 쓸 수 있습니다. 휴대폰에서 만든 TXT는 '기록 찾기 → 새 TXT'로 가져오세요.</p><div id="audioResult"></div></section></div></div>
+<div id="data" hidden><section><h2>새 TXT</h2><div class="row"><button id="sync" class="primary">새 TXT 확인</button><a id="inbox" target="_blank" rel="noopener">TXT 입력 폴더 열기 →</a></div>
+<small>폴더에 올린 TXT는 바로 저장되지 않습니다. 살펴본 뒤 남길 문장만 고릅니다. 고르지 않은 대화는 저장하지 않습니다.</small>
+<div id="inboxFiles"></div><div id="review"></div></section>
+<section><h2>저장한 기록</h2><div class="row"><input type="date" id="date" aria-label="날짜"><input id="query" aria-label="검색어" placeholder="키워드(비우면 전체)"><button id="search">찾기</button><button id="export">전체 JSON 내보내기</button></div></section>
+<p id="count"></p><div id="records"></div><div class="row"><button id="prev">← 이전</button><button id="next">다음 →</button></div>
+<section><h2>이전 방식 기록</h2><small>2026-10-16 이전 방식으로 저장된 기록입니다(TXT 원문 전체 저장, 일부는 글자가 깨져 있음). 확인 후 필요 없으면 삭제하세요.</small><div class="row"><button id="legacy">불러오기</button></div><div id="legacyRecords"></div></section></div>
+<div id="evening" hidden><section><h2>저녁 정리</h2><div class="row"><input type="date" id="eveDate" aria-label="날짜"><button id="loadEve">보기</button></div>
+<small>질문은 모두 선택입니다. '저장'을 누른 답만 남고, 건너뛰면 아무것도 남지 않습니다.</small><div id="eveBox"></div></section></div>
+<div id="profile" hidden><section><h2>내가 남기는 자기정보</h2><div id="profileValues"></div>
+<label>항목<input id="profileKey" placeholder="예: 부르고 싶은 이름 / 등록한 사람"></label><label>제안값<textarea id="profileValue"></textarea></label><label>근거<input id="profileEvidence" placeholder="예: 오늘 내가 직접 말한 내용"></label>
+<div class="row"><button id="propose">변경 제안 남기기</button></div><small>제안은 승인하기 전까지 현재 정보에 반영되지 않습니다. 항목 '등록한 사람'에 이름을 쉼표로 적어 두면 기록에서 그 사람을 찾고, 외부 AI로 보낼 때는 자동으로 가립니다.</small></section><div id="proposals"></div></div>
+</main></div>
+<dialog id="previewDialog"><h2 id="previewTitle">전송 내용 확인</h2><p id="previewHelp"></p><textarea id="previewText" aria-label="전송할 내용"></textarea><label class="consent"><input type="checkbox" id="consent"> 표시된 내용을 Google Gemini에 전송하는 데 동의합니다.</label><div class="row"><button id="sendPreview" class="primary">전송</button><button id="cancelPreview">취소</button></div></dialog>
+<script>
+const $=id=>document.getElementById(id);let page=0,total=0,pending=null,busy=false,status={},lastQ='';
+const SRC={self_statement:'직접 남긴 말',imported_transcript:'녹음 TXT',device_ai_summary:'녹음 앱 요약(자동 생성)',evening_answer:'저녁 정리 답'};
+const KIND={plan:'할 일',done:'한 일',event:'있었던 일',note:'메모',answer:'답',summary:'요약'};
+const TASK={open:'아직 안 끝남',done:'끝냄',dropped:'그만두기로 함'};
+function rpc(name,...args){return new Promise((resolve,reject)=>google.script.run.withSuccessHandler(resolve).withFailureHandler(reject)[name](...args));}
+function node(tag,text,cls){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;}
+function fmt(iso){return iso?new Date(iso).toLocaleString('ko-KR',{timeZone:'Asia/Seoul',month:'numeric',day:'numeric',weekday:'short',hour:'numeric',minute:'2-digit'}):'시각 모름';}
+function kstToday(){return new Date(Date.now()+9*3600e3).toISOString().slice(0,10);}
+function say(role,text,cls){const m=node('div',undefined,'message'+(cls?' '+cls:''));m.append(node('span',role,'role'),document.createTextNode(text));$('conversation').append(m);$('conversation').scrollTop=$('conversation').scrollHeight;}
+async function run(fn){if(busy)return;busy=true;document.querySelectorAll('button').forEach(b=>b.disabled=true);$('status').textContent='처리 중…';try{await fn();$('status').textContent='완료';}catch(e){$('status').textContent=e.message||String(e);}finally{busy=false;document.querySelectorAll('button').forEach(b=>b.disabled=false);}}
+function preview(title,help,text,callback,readonly=false){$('previewTitle').textContent=title;$('previewHelp').textContent=help;$('previewText').value=text;$('previewText').readOnly=readonly;$('consent').checked=false;pending=callback;$('previewDialog').showModal();}
+$('cancelPreview').onclick=()=>{$('previewDialog').close();pending=null;};
+$('sendPreview').onclick=()=>{if(!$('consent').checked){alert('외부 전송 동의를 확인하세요.');return;}const cb=pending,text=$('previewText').value;$('previewDialog').close();pending=null;run(()=>cb(text));};
+// 읽어 주기: 기기에 내장된(localService) 한국어 음성만 사용. 없으면 읽지 않는다(글이 외부 음성 서버로 가지 않게).
+function speak(text){if(!$('speak').checked||!window.speechSynthesis)return;const v=speechSynthesis.getVoices().find(v=>v.lang&&v.lang.startsWith('ko')&&v.localService);if(!v){$('status').textContent='이 기기에 내장된 한국어 음성이 없어 읽어 주기를 하지 않았습니다.';return;}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.voice=v;u.lang=v.lang;u.rate=0.9;speechSynthesis.speak(u);}
+if(window.speechSynthesis)speechSynthesis.getVoices();
+function showTab(tab){['talk','data','evening','profile'].forEach(id=>$(id).hidden=id!==tab);document.querySelectorAll('[data-tab]').forEach(x=>x.setAttribute('aria-selected',x.dataset.tab===tab));}
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>run(async()=>{const t=b.dataset.tab;showTab(t);if(t==='talk')await loadNow();if(t==='data'){await loadInbox();await loadRecords();}if(t==='evening')await loadEvening();if(t==='profile')await loadProfile();}));
+// ---- 대화 ----
+$('save').onclick=()=>run(async()=>{const text=$('entry').value;const b=await rpc('saveStatement',{text,requestId:crypto.randomUUID()});say('나',b.text);say('저장',b.task?'할 일로 남겼습니다. 끝나면 "끝냈어요"를 눌러 주세요.':'기록을 남겼습니다.');$('entry').value='';await loadNow();});
+$('ask').onclick=()=>run(async()=>{const q=$('entry').value.trim();if(!q)throw Error('물어볼 내용을 적어 주세요.');lastQ=q;say('질문',q);const r=await rpc('askLocal',q);say('기록에서 찾은 답',r.answer,'answer');speak(r.answer);$('askAi').hidden=!(status.aiEnabled&&r.items.length);$('entry').value='';});
+$('askAi').onclick=()=>run(async()=>{const context=await rpc('prepareChat',lastQ);if(!context.records.length){say('검색','보낼 기록이 없습니다.');return;}
+preview('질문과 참고 기록 확인','연락처와 등록한 사람 이름은 미리 가렸습니다. 더 지울 내용이 있으면 지우고 보내세요. 이 화면의 텍스트만 전송합니다.',JSON.stringify(context,null,2),async text=>{const r=await rpc('chat',{preview:text,consent:true});say('외부 AI 답변 · 추론일 수 있음',r.answer,'answer');speak(r.answer);});});
+function citeList(items,empty){if(!items.length)return node('p',empty,'muted');const ul=node('ul',undefined,'plain');items.forEach(c=>ul.append(node('li',c.time+' · '+c.text+(c.task?' ('+c.task+')':''))));return ul;}
+async function loadNow(){const n=await rpc('getNow');const box=$('nowBox');box.replaceChildren(node('p','지금: '+n.now,'muted'));
+box.append(node('h3','기록상 다음 할 일'),n.next?node('p',n.next.text+' · '+n.next.time):node('p','남아 있는 할 일 기록이 없습니다.','muted'));
+box.append(node('h3','30분 전 이전의 마지막 기록'),n.lastBefore30?node('p',n.lastBefore30.time+' · '+n.lastBefore30.text):node('p','기록이 없습니다.','muted'));
+box.append(node('h3','최근 6시간 기록'),citeList(n.recent,'최근 기록이 없습니다.'),node('h3','아직 안 끝난 일'),citeList(n.open,'없습니다.'));}
+$('refreshNow').onclick=()=>run(loadNow);
+// ---- 새 TXT ----
+const FSTAT={pending:'확인 대기',imported:'가져옴',rejected:'가져오지 않음',error:'오류'};
+async function loadInbox(){const r=await rpc('inboxList');$('inboxFiles').replaceChildren(...r.files.map(f=>{const a=node('article');a.append(node('small',FSTAT[f.status]+(f.status==='imported'?' · 블록 '+f.blocks+'개':'')+(f.status==='error'?' · 시도 '+f.attempts+'회':'')),node('p',f.name));if(f.lastError)a.append(node('p','오류: '+f.lastError,'muted'));
+if(f.status==='pending'){const row=node('div',undefined,'row'),b=node('button','살펴보기','primary');b.onclick=()=>run(()=>review(f.fileId));row.append(b);a.append(row);}return a;}));}
+$('sync').onclick=()=>run(async()=>{const r=await rpc('syncInbox');await loadInbox();$('status').textContent='새 파일 '+r.found+'개 · 바뀐 파일 '+r.changed+'개 · 오류 '+r.errors+'개'+(r.more?' · 남은 파일은 다시 누르면 확인합니다.':'');});
+async function review(fileId){const p=await rpc('previewInboxFile',fileId);const box=$('review');box.replaceChildren();const s=node('section');
+s.append(node('h3',p.name),node('p','녹음 시작: '+fmt(p.startedAt)+' · 문장 '+p.totalSentences+'개 중 '+(p.totalSentences-p.droppedSentences)+'개를 후보로 골랐습니다. 나머지는 저장하지 않습니다.','muted'));
+const link=node('a','원본 TXT 열기 →');link.href=p.fileUrl;link.target='_blank';link.rel='noopener';s.append(link);
+const rows=p.candidates.map(c=>{const d=node('div',undefined,'cand');const cb=node('input');cb.type='checkbox';cb.checked=c.selected;cb.setAttribute('aria-label','이 블록 저장');const right=node('div');
+right.append(node('small',[c.sourceType==='device_ai_summary'?'녹음 앱이 만든 요약(내 말 아님)':KIND[c.kind],c.speaker,c.offsetText&&('녹음 '+c.offsetText),c.occurredAt&&fmt(c.occurredAt)].filter(Boolean).join(' · ')));
+const ta=node('textarea');ta.value=c.text;ta.setAttribute('aria-label','블록 내용');right.append(ta);d.append(cb,right);s.append(d);return {c,cb,ta};});
+if(!rows.length)s.append(node('p','남길 만한 문장을 찾지 못했습니다. 필요한 내용은 대화 화면에서 직접 남겨 주세요.','muted'));
+const row=node('div',undefined,'row'),ok=node('button','선택한 것 저장','primary'),no=node('button','이 파일 가져오지 않기','danger');
+ok.onclick=()=>run(async()=>{const selected=rows.filter(x=>x.cb.checked).map(x=>x.c.idx),edits={};rows.forEach(x=>{if(x.cb.checked&&x.ta.value!==x.c.text)edits[x.c.idx]=x.ta.value;});const r=await rpc('importInboxFile',{fileId,hash:p.hash,selected,edits});box.replaceChildren(node('p',r.saved+'개 블록을 저장했습니다.'));await loadInbox();await loadRecords();});
+no.onclick=()=>run(async()=>{await rpc('rejectInboxFile',{fileId});box.replaceChildren();await loadInbox();});
+row.append(ok,no);s.append(row);box.append(s);s.scrollIntoView({behavior:'smooth'});}
+// ---- 저장한 기록(블록) ----
+function blockCard(b){const a=node('article');a.append(node('small',[fmt(b.occurredAt||b.recordedAt||b.createdAt),SRC[b.sourceType]||b.sourceType,KIND[b.kind],b.speaker].filter(Boolean).join(' · ')),node('p',b.text));
+if(b.task)a.append(node('p','상태: '+TASK[b.task.status],'muted'));const row=node('div',undefined,'row');
+function button(label,fn,cls){const x=node('button',label,cls);x.onclick=()=>run(fn);row.append(x);}
+if(b.task)[['done','끝냈어요'],['open','아직이에요'],['dropped','그만둘래요']].filter(([s])=>s!==b.task.status).forEach(([s,l])=>button(l,async()=>{await rpc('setTaskStatus',{id:b.id,status:s});await loadRecords();}));
+button('고치기',async()=>{const text=prompt('고칠 내용 · 이전 내용은 이력에 남습니다.',b.text);if(text===null)return;await rpc('correctBlock',{id:b.id,revision:b.revision,text});await loadRecords();});
+button('삭제',async()=>{if(!confirm('이 블록의 내용과 이력을 지웁니다. 삭제할까요?'))return;await rpc('deleteBlock',b.id);await loadRecords();},'danger');a.append(row);return a;}
+async function loadRecords(){const r=await rpc('listBlocks',{date:$('date').value,query:$('query').value,page});total=r.total;$('count').textContent=total+'건 · '+(page+1)+'쪽';$('records').replaceChildren(...r.items.map(blockCard));}
+$('search').onclick=()=>run(async()=>{page=0;await loadRecords();});$('prev').onclick=()=>run(async()=>{page=Math.max(0,page-1);await loadRecords();});$('next').onclick=()=>run(async()=>{if((page+1)*20<total)page++;await loadRecords();});
+// ---- 이전 방식 기록(녹음 업로드 포함) ----
+function recordCard(r){const a=node('article');a.append(node('small',r.createdAt+' · '+r.sourceType+' · '+(r.source||'')),node('p',r.deleted?'(삭제됨)':(r.text||'전사 대기 중')));if(r.analysis)a.append(node('pre','AI 분석 · 추론\n'+JSON.stringify(r.analysis.content,null,2)));if(r.deleted)return a;const row=node('div',undefined,'row');
+function button(label,fn,cls){const b=node('button',label,cls);b.onclick=()=>run(fn);row.append(b);}
+if(r.audioFileId&&r.transcriptionStatus!=='completed')button('전사',async()=>{preview('녹음 전사','원음 전체가 Google Gemini에 전송됩니다. 전사 결과는 실제 발화와 다를 수 있습니다.',r.source+'\n기록 ID: '+r.id,async()=>{const updated=await rpc('transcribeAudio',{id:r.id,consent:true});say('전사 결과',updated.text);$('audioResult').replaceChildren(recordCard(updated));},true);});
+if(r.text)button('정정',async()=>{const text=prompt('기록 정정 · 이전 내용은 이력에 남습니다.',r.text);if(text===null)return;await rpc('correctRecord',{id:r.id,revision:r.revision,text});await loadLegacy();});
+button('삭제',async()=>{if(!confirm('본문·분석·수정 이력을 지우고 원음은 Drive 휴지통으로 이동합니다. 삭제할까요?'))return;await rpc('deleteRecord',r.id);await loadLegacy();$('audioResult').replaceChildren();},'danger');a.append(row);return a;}
+async function loadLegacy(){const r=await rpc('listRecords','',0);$('legacyRecords').replaceChildren(...(r.items.length?r.items.map(recordCard):[node('p','없습니다.','muted')]));}
+$('legacy').onclick=()=>run(loadLegacy);
+$('upload').onclick=()=>run(async()=>{const f=$('audio').files[0];if(!f)throw Error('녹음 파일을 선택하세요.');if(f.size>8*1024*1024)throw Error('8 MiB 이하 파일을 선택하세요.');const ext=f.name.split('.').pop().toLowerCase();const types={mp3:'audio/mpeg',m4a:'audio/mp4',wav:'audio/wav',webm:'audio/webm'};if(!types[ext])throw Error('mp3/m4a/wav/webm 파일을 선택하세요.');const base64=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result.split(',')[1]);reader.onerror=reject;reader.readAsDataURL(f);});const r=await rpc('uploadAudio',{requestId:crypto.randomUUID(),name:f.name,mimeType:types[ext],base64});$('audioResult').replaceChildren(recordCard(r));$('audio').value='';});
+$('export').onclick=()=>run(async()=>{const data=await rpc('exportRecords');const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));const a=node('a');a.href=url;a.download='external-memory-'+kstToday()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
+// ---- 저녁 정리 ----
+async function loadEvening(){const e=await rpc('getEvening',$('eveDate').value);const box=$('eveBox');box.replaceChildren(node('p',e.date+' · 기록 '+e.count+'건 · 한 일 '+e.done+'건','muted'),node('h3','그날의 기록'),citeList(e.timeline,'이 날짜의 기록이 없습니다.'),node('h3','아직 안 끝난 일'));
+if(!e.open.length)box.append(node('p','없습니다.','muted'));
+e.open.forEach(c=>{const a=node('article');a.append(node('small',c.time),node('p',c.text));const row=node('div',undefined,'row');[['done','끝냈어요'],['dropped','그만둘래요']].forEach(([s,l])=>{const b=node('button',l);b.onclick=()=>run(async()=>{await rpc('setTaskStatus',{id:c.id,status:s});await loadEvening();});row.append(b);});const k=node('button','건너뛰기');k.onclick=()=>a.remove();row.append(k);a.append(row);box.append(a);});
+box.append(node('h3','선택 질문'));
+e.questions.forEach(q=>{const a=node('article');a.append(node('p',q.text));const input=node('input');input.placeholder='직접 쓰기 (선택)';input.setAttribute('aria-label',q.text);let choice='';const chips=node('div',undefined,'row');
+q.choices.forEach(c=>{const b=node('button',c);b.onclick=()=>{choice=c;if(!input.value)input.value=c;};chips.append(b);});const row=node('div',undefined,'row'),save=node('button','이 답 저장','primary'),skip=node('button','건너뛰기');
+save.onclick=()=>run(async()=>{const r=await rpc('saveEveningAnswer',{questionId:q.id,choice,answer:input.value,requestId:crypto.randomUUID()});a.replaceChildren(node('p',r.proposed?'내 정보에 제안으로 남겼습니다. 승인해야 반영됩니다.':'저장했습니다.','muted'));});
+skip.onclick=()=>a.replaceChildren(node('p','건너뛰었습니다. 아무것도 저장하지 않았습니다.','muted'));row.append(save,skip);a.append(chips,input,row);box.append(a);});}
+$('loadEve').onclick=()=>run(loadEvening);
+// ---- 내 정보 ----
+async function loadProfile(){const p=await rpc('getProfile');$('profileValues').replaceChildren(node('pre',JSON.stringify(p.values,null,2)));$('proposals').replaceChildren(...p.proposals.filter(x=>x.status==='pending').map(item=>{const a=node('article');a.append(node('strong',item.key),node('p','기존: '+item.oldValue+'\n제안: '+item.value+'\n근거: '+item.evidence));const row=node('div',undefined,'row');const approve=node('button','승인 또는 수정');approve.onclick=()=>run(async()=>{const v=prompt('확정할 값을 입력하세요.',item.value);if(v===null)return;await rpc('decideProfile',{id:item.id,action:'approve',editedValue:v});await loadProfile();});const reject=node('button','거절','danger');reject.onclick=()=>run(async()=>{await rpc('decideProfile',{id:item.id,action:'reject'});await loadProfile();});row.append(approve,reject);a.append(row);return a;}));}
+$('propose').onclick=()=>run(async()=>{await rpc('proposeProfile',{key:$('profileKey').value,value:$('profileValue').value,evidence:$('profileEvidence').value});await loadProfile();});
+run(async()=>{status=await rpc('getStatus');$('date').value='';$('eveDate').value=status.today;$('connection').textContent='개인 Drive 저장 · 외부 AI '+(status.aiEnabled?'켜짐':'꺼짐')+' · 확인 대기 TXT '+status.inboxPending+'개 · 자동 확인 '+(status.triggerEnabled?'켜짐':'꺼짐');$('inbox').href=status.inboxUrl;await loadNow();});
+</script></body></html>
