@@ -1,0 +1,56 @@
+[
+  {
+    "id": "A1",
+    "title": "Heersmink 2022",
+    "type": "theory",
+    "url": "https://doi.org/10.1007/s12152-022-09479-x"
+  },
+  {
+    "id": "A2",
+    "title": "This is me",
+    "type": "profile_template",
+    "url": "https://www.alzheimers.org.uk/get-support/publications-factsheets/this-is-me"
+  },
+  {
+    "id": "B1",
+    "title": "Woods et al 2018 Cochrane",
+    "type": "evidence_review",
+    "url": "https://doi.org/10.1002/14651858.CD001120.pub3"
+  },
+  {
+    "id": "B2",
+    "title": "NICE NG97",
+    "type": "guideline",
+    "url": "https://www.nice.org.uk/guidance/ng97/chapter/recommendations"
+  },
+  {
+    "id": "B3",
+    "title": "NIA Communication",
+    "type": "communication",
+    "url": "https://www.nia.nih.gov/health/alzheimers-changes-behavior-and-communication/communicating-someone-who-has-alzheimers"
+  },
+  {
+    "id": "B4",
+    "title": "WHO 2026 risk reduction",
+    "type": "background_only",
+    "url": "https://www.who.int/publications/i/item/9789240123557"
+  },
+  {
+    "id": "C1",
+    "title": "GAS chatbot sample",
+    "type": "development_example",
+    "url": "https://script.google.com/macros/s/AKfycbyvWQteWULz37DOZFKssSNXLVM2G_HiG8vjNRqYXYWp1d_xk_IK11o8rFwWinC2KKg0/exec"
+  },
+  {
+    "id": "C2",
+    "title": "GAS alpha deployment",
+    "type": "own_test_url",
+    "url": "https://script.google.com/macros/s/AKfycbzNVMk_z4YswX1Yb67HM7Twju7_qC29ytbJJdxtcz5UlcrhH-AvpaZTRVapQ2ZyuK_U/exec"
+  },
+  {
+    "id": "C3",
+    "title": "GAS security review target",
+    "type": "own_test_url",
+    "url": "https://script.google.com/macros/s/AKfycbyM-rLJ_z4yeOh-vJwcQNRpfjRyqyIUoDM1RHUbbYSKBtHl5bT0DmkTlq9sntFlHE8p/exec"
+  }
+]
