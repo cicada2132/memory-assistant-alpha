@@ -47,7 +47,7 @@
 - [x] **2026-10-16 15:08 배포 (사용자 요청)** — 위 CEMM·하루 상담·Knowledge 전부. 테스트 24개 통과 확인 후 `clasp push --force`(11개 파일) → `clasp create-version` = **버전 5** → `clasp redeploy AKfycbwNRbFl… -V 5`. /exec 주소 그대로
   - 되돌리기: `clasp redeploy AKfycbwNRbFl-q_P1vYnWPn8aNzPc85nAZs_J4G9j_fGb9_mM5UX7C_6PiFk9R2d_Clhi-0M -V 4` (Gemini 전환본)
   - 배포 후 실제 화면·Drive 동작은 아직 확인 안 함(사용자 확인 필요). BLOCKS·SYSTEM 폴더는 처음 쓸 때 자동 생성됨
-  - git: 이 배포 내용은 아직 커밋 안 됨(첫 커밋 5da3e92 이후 변경분)
+  - git: 2026-10-16 15:23 커밋 e4a9bbc(배포 버전 7까지 전부)로 GitHub(cicada2132/memory-assistant-alpha, 공개) main에 push 완료. 올리기 전 개인정보·키 검사: 테스트용 가짜 번호만 있음
 - [x] **2026-10-16 상담 캐릭터: 고양이 "모리" md 작성 (파일만, 코드 연결 안 함)**
   - 원본: ClawSouls `clawsouls/mori` v1.2.0(어르신 돌봄 로봇, CC-BY-4.0). `https://clawsouls.ai/api/v1/bundle/clawsouls/mori`로 파일만 받음(npx 실행 안 함) → `character/source_mori/`에 그대로 보관
   - 고친 파일: `character/SOUL.md` — 사람 흉내 안 내는 고양이, 존댓말, 행동은 괄호로 한 번, "냥" 금지, 기록에 없는 일 지어내지 않기, 위기 시 119·109 안내. 맨 위에 출처·라이선스·바꾼 점 표시
