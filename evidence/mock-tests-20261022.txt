@@ -1,0 +1,26 @@
+PASS all GAS + frontend scripts parse
+PASS setup is repeatable and preserves folder identity
+PASS unauthorized and blank sessions denied
+PASS save is idempotent for the same request ID
+PASS local chat answers only from saved blocks and masks phone numbers
+PASS correction preserves history and rejects stale writes
+PASS Galaxy UTF-16 TXT waits for approval and stores only selected info blocks
+PASS TXT errors are logged and retried at most 3 times
+PASS profile proposal does not mutate accepted values
+PASS profile approval is explicit and records history
+PASS stale profile proposals cannot overwrite newer decisions
+PASS external AI is off by default and needs consent, flag and key
+PASS chat sends only the edited preview to Gemini
+PASS privacy gate blocks phone numbers and registered names before sending
+PASS analysis excludes invented evidence quotes
+PASS audio upload remains retryable until transcription succeeds
+PASS consented audio pipeline reuses transcript and performs analysis
+PASS delete clears block content, imported TXT does not return, audio goes to trash
+PASS now view and evening review connect events and open tasks; answers saved only when chosen
+PASS task status is changed only by the user and reflected in answers
+PASS new endpoints reject other accounts
+PASS manifest enforces owner-only deployment
+PASS day counsel: preview from that day, consent, gate, alternating turns, no storage
+PASS counsel always sends the project knowledge documents
+PASS counsel uses cat character Mori and rules come first
+25 tests passed (mocked services; no Google/Gemini live calls).

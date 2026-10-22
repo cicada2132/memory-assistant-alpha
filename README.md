@@ -1,76 +1,103 @@
-# External Memory Alpha — Antigravity 전달 패키지
+# External Memory Alpha
 
-작성일: 2026-10-16 KST. 사용자 요청에 따라 키는 나중에 직접 입력한다.
+### 사용자의 생각과 선택을 돕는 개인 외장 기억 보조 도구
 
-`ANTIGRAVITY_INSTRUCTIONS.md`를 Antigravity에 전달하고 이 폴더 전체를 함께 제공한다.
-코드는 구현되어 있으므로 처음부터 새로 만들 필요가 없다. 연결 확인 → 원격 백업 → 코드 검증 → push → 본인 전용 배포를 이어서 수행한다.
+일상 대화와 기록에서 사용자가 선택한 정보를 보관하고, 출처가 있는 기록을 다시 찾아 대화할 수 있도록 만든 연구 기반 웹 프로토타입입니다. 치매 환자의 기억 공백과 자기결정권을 함께 고려하며, 사회복지·인간 중심 AI·소프트웨어 설계를 연결합니다.
 
-## 포함된 기능
+**핵심 질문:** “AI가 과거를 대신 확정하지 않으면서, 사람이 자신의 기록으로 지금의 상황을 이해하도록 도울 수 있을까?”
 
-- 단일 Index.html 대화 UI, 본인 진술 저장, 검색, 정정 이력, 삭제, JSON 내보내기.
-- Google Drive 개인 폴더의 JSON 파일을 DB로 사용. Google Sheets 의존성 없음.
-- INBOX의 UTF-8 TXT 수동/5분 주기 수집. 파일ID+내용 해시로 중복 방지.
-- 녹음 업로드 → 외부 전송 동의 → 음성 전사 → 자동 사건 분석. 전사만 실행하는 경로도 제공.
-- 관련 기록을 검색하고 전송 내용을 확인·편집한 뒤 AI에 질문.
-- 자기정보는 변경 제안 → 승인/수정/거절. 보류는 미처리 상태로 유지.
-- API 키 미설정이어도 저장·조회·TXT 가져오기·파일 업로드·내 정보 관리 가능.
+> 상태: 연구·개발 알파 / 문서 정리: 2026-10-22 KST / 현재 구현: Google Apps Script + Drive JSON + 선택적 Gemini
+>
+> 로컬 모의 테스트 25개 재실행 통과. 실제 Google·Gemini 통합 실행 및 사용자 효과 검증과는 구분합니다. 진단·치료 제품이 아닙니다.
 
-## 빠른 설치
+## 어떤 문제를 다루나요?
 
-1. 전용 Apps Script 프로젝트의 Script ID를 확인한다. 보훈병원 GAS와 구분한다.
-2. 이 폴더에서 `node scripts/bind.mjs 실제_SCRIPT_ID`를 실행한다.
-3. `node tests/run.mjs`로 검사하고, `clasp show-file-status`로 src의 파일만 업로드되는지 확인한다.
-4. 대상 프로젝트를 백업한 뒤 `clasp push`, `clasp open-script`를 실행한다.
-5. Apps Script 편집기에서 `setup_`를 한 번 실행하고 Google 권한을 승인한다.
-6. 배포 → 새 배포 → 웹 앱 → 실행 사용자: 접속 사용자 / 액세스 권한: 나만.
-7. 생성된 /exec 주소에서 사용한다. `clasp push`만으로 기존 배포 URL의 코드가 갱신되지는 않는다. 수정 후 배포 버전도 갱신한다.
+대화를 녹음하거나 일기를 저장해도, 나중에 필요한 순간에 “무엇을 하려 했는지”, “어디까지 했는지”, “이 기록이 누구의 말인지”를 이해하는 일은 남습니다. 이 프로젝트는 저장된 문장을 검색하는 기능에 **시간·출처·진행 상태·사용자 승인**을 연결합니다.
 
-## API 키 입력 위치
+외부 기록을 자신의 삶을 이해하는 단서로 활용하되, 기록을 실제 회상이라고 믿게 만들거나 과거 선택을 현재의 의사보다 우선하지 않는 것이 설계의 중심입니다.
 
-Apps Script → 왼쪽 **프로젝트 설정(톱니바퀴)** → **스크립트 속성** → 속성 추가:
+## 구현한 흐름
 
-| 속성 | 입력값 |
-| --- | --- |
-| OPENAI_API_KEY | 사용자가 직접 입력하는 키 |
-| OPENAI_MODEL | 기본 gpt-4.1-mini; 계정에서 사용 가능한 텍스트 모델로 변경 가능 |
-| TRANSCRIPTION_MODEL | 기본 gpt-4o-mini-transcribe |
+1. 직접 기록을 남기거나 Drive INBOX의 TXT를 확인합니다.
+2. TXT에서 추출된 후보를 살펴보고 **선택한 정보만 블록으로 저장**합니다.
+3. 기록·날짜·할 일 상태를 규칙 기반 검색으로 찾습니다. 외부 AI 없이도 이 경로를 사용할 수 있습니다.
+4. 원하는 경우 전송할 내용을 확인·수정·승인한 뒤 Gemini와 하루 기록을 이야기합니다.
+5. 정정, 삭제, 할 일 상태 변경, 자기정보 승인 여부를 사용자가 결정합니다.
 
-키를 HTML·Code.gs·지시서·Git·채팅에 넣지 않는다. 키를 설정한 뒤 화면을 새로고침한다.
-`setup_`는 기존 키나 모델 설정을 덮어쓰지 않는다.
+현재 GAS는 Google 클라우드에서 동작합니다. “외부 AI 없이 검색”은 “기기 내 오프라인 처리”라는 뜻이 아닙니다.
 
-## TXT 자동 수집
+## 주요 기능과 검증 범위
 
-사이트의 ‘TXT 입력 폴더 열기’에 .txt를 올린다. 기존 다른 폴더를 읽으려면 편집기의 INBOX_FOLDER_ID 속성을 **그 폴더 ID로** 변경한다.
-이 폴더에는 이번 실험의 입력 파일만 넣는다. 하위 폴더는 검색하지 않는다.
-처음은 ‘TXT 가져오기’로 확인하고, 자동 수집을 원하면 편집기에서 `enableInboxSync_`를 한 번 실행한다.
-중지는 `disableInboxSync_`. 한 실행당 30개 파일을 검사하며 이후는 커서로 이어간다.
-동일 파일·동일 내용은 재수집하지 않고, 같은 파일을 수정하면 새 기록으로 수집한다.
+| 기능 | 현재 상태 | 근거 |
+|---|---|---|
+| 직접 기록·정정 이력·삭제·JSON 내보내기 | 코드 및 관련 모의 테스트 확인 | `Blocks.gs`, `MemoryService.gs`, `Database.gs` |
+| UTF-8/UTF-16 TXT, 승인 대기, 선택 저장, 중복 방지 | 코드 및 모의 테스트 확인 | `Blocks.gs` |
+| 날짜·키워드·할 일 질문에 대한 규칙 기반 답변 | 코드 및 모의 테스트 확인 | `Assistant.gs` |
+| 최근 기록·미완료 작업·저녁 정리 | 코드 및 모의 테스트 확인 | `Assistant.gs` |
+| 외부 AI 기본 비활성화·전송 확인·일부 개인정보 가림 | 코드 및 모의 테스트 확인 | `ChatService.gs` |
+| 하루 상담·큰 자막·기기 내장 한국어 음성·모리 | 코드 확인, 서버 경로 일부 모의 테스트 | `Counsel.gs`, `Index.html` |
+| 녹음 파일 업로드·Gemini 전사·분석 | 별도 RECORDS 경로 구현, 모의 테스트 | `AudioService.gs` |
+| 휴대폰 → Drive 자동 업로드·온디바이스 전사 | 현재 저장소의 완성 기능 아님 | 후속 계획 |
+| 치매 환자 사용성·기억/정체성 보조 효과 | 미평가 | 연구 질문 |
 
-## 현재 한계
+주의: 녹음 전사 결과를 승인형 블록·하루 상담에 자동 연결하는 전체 과정은 완료로 표현하지 않습니다. [구현 현황](docs/STATUS.md)을 참고하세요.
 
-GAS/Drive는 Google 클라우드다. 로컬 원본 보관·로컬 전사라는 장기 설계를 구현한 것이 아니며, 개인/가상 데이터로 연결을 검증하는 별도 알파다. 기존 Python/SQLite 이행 패키지는 변경하지 않는다.
+## 설계의 특징
 
-이 패키지를 기존 ChatGPT Sites에 자동 연결하거나 기존 브라우저 DB를 이전하지는 않았다. GAS의 독립 실행 UI다. 기존 사이트에서 GAS 본인 전용 웹 앱을 여는 연결은 후속 단계로 명시한다.
+- **출처 분리:** 직접 진술, 녹음 전사, 기기 생성 요약, AI 해석을 같은 사실로 합치지 않습니다.
+- **사용자 통제:** 저장할 문장과 자기정보 변경을 선택할 수 있습니다.
+- **단계적 자동화:** TXT 발견은 자동화하고, 기억 저장 여부는 확인하는 구조입니다.
+- **근거 기반 대화:** 없는 기록은 없다고 답하도록 설계했습니다. 생성형 답변의 오류 가능성은 별도 평가 대상입니다.
+- **연구와 구현의 연결:** 분산 기억·서사적 정체성 논의와 개인 중심 돌봄 자료를 기능 설계에 연결했습니다. 이것이 앱의 임상 효과를 입증하지는 않습니다.
 
-원음 8 MiB, 텍스트 30,000자, 분석 입력 앞 12,000자, 관련 기록 5개(각 1,800자), 저장소 1,000건의 알파 한도다. 한 시간 녹음 전체를 GAS에서 안정적으로 처리한다고 보장하지 않는다. 짧은 파일로 나누거나 후속 로컬 작업 큐로 처리한다.
+## 기술 구성
 
-검색은 단어 포함 방식이다. 자연어 질문의 동의어·한국어 조사·날짜 추론 및 임베딩 검색은 미구현이다. 먼저 ‘도서관’ 같은 핵심 단어로 시험한다.
-타임스탬프 자막 정렬, 실시간 스트리밍, 상시 녹음, 하드웨어 연동은 미구현이다. 발생 시각을 모르면 null로 저장하며 저장 시각을 실제 사건 시각으로 바꾸지 않는다.
+| 영역 | 현재 선택 |
+|---|---|
+| 웹 UI | HTML / CSS / JavaScript, Apps Script HTML Service |
+| 서버 | Google Apps Script V8 |
+| 데이터 | 개인 Google Drive의 JSON 파일, 월별 정보 블록 |
+| 검색 | 규칙·키워드·날짜 범위, 결과 최대 5건 |
+| 선택적 생성 AI | Gemini `generateContent`, 모델은 Script Properties에서 설정 |
+| 음성 출력 | Web Speech API의 `localService` 한국어 음성 |
+| 검사 | Node.js `vm`과 모의 Google 서비스, 기존 테스트 25개 |
 
-외부 전송 전 사용자가 확인·수정하는 절차를 제공한다. 자동 비식별화 완성을 주장하지 않는다. ‘전사+자동 분석’은 원음 전체와 생성 전사 앞 12,000자 전송에 한 번 동의하는 경로다. 원음은 전사 전에 자동 익명화되지 않는다.
-`store:false`는 Responses 저장 옵션이며 모든 제공업체 로그가 남지 않는다는 보장이 아니다. 음성 전사에는 이 옵션을 보내지 않는다.
-삭제는 본문·분석·이력을 지우고 원음을 Drive 휴지통으로 옮긴다. 원본 TXT·사용자 내보내기·Drive 휴지통까지 영구 삭제하지 않는다. 파일 내용이 바뀌면 별도 새 기록이 수집될 수 있다.
+## 시작하기
 
-## 검증 상태
+기존 저장소에서 다음 검사를 실행할 수 있습니다. 실제 사용을 위한 프로젝트 연결과 배포는 [설치 안내](docs/SETUP.md)를 따릅니다.
 
-17개 로컬 모의 테스트 통과. 실제 Google 권한 승인, Drive 실행, 브라우저 UI, 예약 트리거, OpenAI 호출, clasp push 및 배포는 사용자 PC에서 확인해야 한다. Script ID/Drive 폴더 ID/키를 임의로 채우지 않았다.
+```bash
+git clone https://github.com/cicada2132/memory-assistant-alpha.git
+cd memory-assistant-alpha
+node tests/run.mjs
+```
 
-## 근거 및 기술 문서
+현재 키 이름은 `GEMINI_API_KEY`이며, 외부 AI 실행에는 `EXTERNAL_AI_ENABLED=true`도 필요합니다. 키는 Apps Script의 스크립트 속성에만 입력합니다. 초기 README의 `OPENAI_API_KEY`, `setup_` 안내는 현재 코드 기준으로 오래된 설명입니다.
 
-- clasp 공식 명령 및 push 동작: https://github.com/google/clasp
-- GAS 본인 전용 웹 앱 설정: https://developers.google.com/apps-script/manifest/web-app-api-executable
-- GAS 웹 앱: https://developers.google.com/apps-script/guides/web
-- OpenAI 전사 API: https://developers.openai.com/api/reference/resources/audio/subresources/transcriptions/methods/create
-- Responses API: https://developers.openai.com/api/docs/guides/text
+## 문서 안내
 
-기존 설계 문서 `PROJECT_MEMORY_v0.2(2).md`와 `PROJECT_MEMORY(2).md` v0.4에서 현재 자기결정, 출처 분리, This is me 참고, 자기정보 갱신 승인 원칙을 반영했다. 원본 서식을 복제하지 않았다.
+| 문서 | 내용 |
+|---|---|
+| [프로젝트 배경](docs/OVERVIEW.md) | 문제 정의, 사회복지·철학적 방향, 범위 |
+| [아키텍처](docs/ARCHITECTURE.md) | 실제 데이터 흐름과 장기 로컬 우선 설계 |
+| [데이터 모델](docs/DATA_MODEL.md) | 블록, 출처, 시각, 수정·삭제 의미 |
+| [연구 근거](docs/RESEARCH.md) | 채택 자료, 적용 범위, 미검증 가설 |
+| [윤리·프라이버시](docs/ETHICS.md) | 자기결정, 기억 오염, 전송·보존 경계 |
+| [현재 구현·평가](docs/STATUS.md) | 코드 확인, 모의 검사, 미검증 항목 |
+| [설치 안내](docs/SETUP.md) | 현재 Gemini/GAS 구성 |
+| [개발 결정 이력](docs/DECISIONS.md) | 설계 변화와 문서 충돌 정리 |
+| [로드맵](docs/ROADMAP.md) | 우선순위와 완료 조건 |
+| [해커톤 시연](docs/DEMO.md) | 3분 구성, 합성 데이터, 실패 시 대안 |
+| [포트폴리오 소개](docs/PORTFOLIO.md) | 짧은 소개와 기술적 설명, 예상 질문 |
+| [정리 근거](docs/SOURCE_AUDIT.md) | 확인한 커밋·자료, 이번 작업 범위 |
+
+## 연구 출발점
+
+- Richard Heersmink (2022), *Preserving Narrative Identity for Dementia Patients: Embodiment, Active Environments, and Distributed Memory*, Neuroethics 15, 8. [DOI](https://doi.org/10.1007/s12152-022-09479-x)
+- Alzheimer's Society, [This is me](https://www.alzheimers.org.uk/get-support/publications-factsheets/this-is-me)
+
+## 한계와 기여
+
+이 프로젝트의 현재 기여는 새로운 치료 효과의 발견이 아니라, **사용자의 주체성을 출처·승인·정정·전송 제어라는 구체적 소프트웨어 구조로 옮긴 것**입니다. 검색 품질, 화자 구분, 민감정보 누락, 실제 사용 부담과 통합 동작은 추가 검증이 필요합니다.
+
+모리 캐릭터 설정은 ClawSouls Mori v1.2.0을 수정한 자료이며 원본의 CC BY 4.0 출처·변경 고지를 유지합니다. 저장소 전체 코드의 라이선스와 동일하게 취급하지 않습니다. 원 저장소의 최상위 코드 라이선스는 별도 확정이 필요합니다.
